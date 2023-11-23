@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { Taddress, TfullName, Torders, Tuser } from './user.interface';
+import bcrypt from 'bcrypt';
+import config from '../config';
 
 const userNameSchema = new Schema<TfullName>({
   firstName: { type: String, required: [true, 'First name is required'] },
@@ -42,6 +44,22 @@ const userSchema = new Schema<Tuser>({
   orders: {
     type: [userOrderSchema],
     default: [],
+  },
+});
+
+userSchema.pre('save', async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bycript_salt_round),
+  );
+  next();
+});
+userSchema.set('toJSON', {
+  transform: function (document, upData) {
+    delete upData.password;
+    return upData;
   },
 });
 
