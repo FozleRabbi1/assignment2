@@ -86,8 +86,8 @@ const updateUserData = async (req: Request, res: Response) => {
 const deleteUser = async (req: Request, res: Response) => {
   try {
     const id = req.params.userId;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
     const result = await userServices.deleteUser(id);
-    console.log(result);
     res.status(200).json({
       success: true,
       message: 'User deleted successfully!',

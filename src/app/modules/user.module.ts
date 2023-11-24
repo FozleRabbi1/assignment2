@@ -6,14 +6,14 @@ import config from '../config';
 const userNameSchema = new Schema<TfullName>({
   firstName: { type: String, required: [true, 'First name is required'] },
   lastName: { type: String, required: [true, 'Last name is required'] },
-  _id: false,
+  // _id: false,
 });
 
 const userAdderssSchema = new Schema<Taddress>({
   street: { type: String, required: [true, 'Street is required'] },
   city: { type: String, required: [true, 'City is required'] },
   country: { type: String, required: [true, 'Country is required'] },
-  _id: false,
+  // _id: false,
 });
 
 const userOrderSchema = new Schema<Torders>({
@@ -23,7 +23,7 @@ const userOrderSchema = new Schema<Torders>({
   },
   price: { type: Number, required: [true, 'Price is required'] },
   quantity: { type: Number, required: [true, 'Quantity is required'] },
-  _id: false,
+  // _id: false,
 });
 
 const userSchema = new Schema<Tuser>({

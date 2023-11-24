@@ -17,6 +17,7 @@ const orderSchema = z.object({
     .number()
     .min(0, { message: 'Price must be greater than or equal to 0' }),
   quantity: z.number().min(1, { message: 'Quantity must be greater than 0' }),
+  // _id: z.boolean(),
 });
 
 export const zodValidationUserSchema = z.object({

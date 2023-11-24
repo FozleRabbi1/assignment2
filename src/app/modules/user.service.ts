@@ -56,7 +56,7 @@ const getSIngleUserOrder = async (id: string | number) => {
 const getTotalPricePerUser = async (id: string | number) => {
   const orderData = await UserData.findById(id).select({ orders: 1 });
   let totalAmount = 0;
-  orderData?.orders.map(
+  orderData?.orders?.map(
     (data) => (totalAmount = totalAmount + data.price * data.quantity),
   );
   return totalAmount;
