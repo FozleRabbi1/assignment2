@@ -1,7 +1,7 @@
-import { Tuser } from './user.interface';
+import { Torders, Tuser } from './user.interface';
 import UserData from './user.module';
 
-const createUserIntoDB = async (data: Tuser) => {
+const createUserIntoDB = async (data: Tuser): Promise<Tuser> => {
   const result = await UserData.create(data);
   return result;
 };
@@ -18,8 +18,33 @@ const getAllUsers = async () => {
 };
 
 const getSIngleUser = async (userId: string | number) => {
-  //   const result = await UserData.aggregate([ { $match: { _id: new ObjectI(id) } }]);
   const result = await UserData.findById(userId);
+  return result;
+};
+
+const updateUserData = async (
+  id: string,
+  userData: Tuser,
+): Promise<Tuser | null> => {
+  const result = await UserData.findByIdAndUpdate(id, userData, {
+    new: true,
+    runValidators: true,
+  });
+  return result;
+};
+
+const deleteUser = async (userId: string): Promise<Tuser | null> => {
+  const result = await UserData.findByIdAndDelete(userId);
+  return result;
+};
+
+const usersOrderData = async (id: string, orders: Torders) => {
+  const filterdata = await UserData.findById(id);
+  if (!filterdata.orders) {
+    filterdata.orders = [];
+  }
+  filterdata?.orders?.push(orders);
+  const result = await UserData.findByIdAndUpdate(id, filterdata);
   return result;
 };
 
@@ -27,4 +52,7 @@ export const userServices = {
   createUserIntoDB,
   getAllUsers,
   getSIngleUser,
+  updateUserData,
+  deleteUser,
+  usersOrderData,
 };

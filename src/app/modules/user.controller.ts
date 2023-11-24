@@ -60,8 +60,77 @@ const getSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+const updateUserData = async (req: Request, res: Response) => {
+  try {
+    const { userData } = req.body;
+    const id = req.params.userId;
+    const result = await userServices.updateUserData(id, userData);
+    res.status(200).json({
+      status: 'success',
+      message: 'User updated successfully',
+      data: result,
+    });
+  } catch (err) {
+    res.status(404).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+      err: err,
+    });
+  }
+};
+
+const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.userId;
+    const result = await userServices.deleteUser(id);
+    console.log(result);
+    res.status(200).json({
+      success: true,
+      message: 'User deleted successfully!',
+      data: null,
+    });
+  } catch (err) {
+    res.status(404).json({
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+    });
+  }
+};
+
+const usersOrderData = async (req: Request, res: Response) => {
+  try {
+    const { orders } = req.body;
+    const id = req.params.userId;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+    const result = await userServices.usersOrderData(id, orders);
+    res.status(200).json({
+      success: true,
+      message: 'Order created successfully!',
+      data: null,
+    });
+  } catch (err) {
+    res.status(404).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+    });
+  }
+};
+
 export const usersControler = {
   createUsers,
   getAllUsers,
   getSingleUser,
+  updateUserData,
+  deleteUser,
+  usersOrderData,
 };
