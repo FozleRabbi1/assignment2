@@ -48,6 +48,20 @@ const usersOrderData = async (id: string, orders: Torders) => {
   return result;
 };
 
+const getSIngleUserOrder = async (id: string | number) => {
+  const result = await UserData.findById(id).select({ orders: 1 });
+  return result;
+};
+
+const getTotalPricePerUser = async (id: string | number) => {
+  const orderData = await UserData.findById(id).select({ orders: 1 });
+  let totalAmount = 0;
+  orderData?.orders.map(
+    (data) => (totalAmount = totalAmount + data.price * data.quantity),
+  );
+  return totalAmount;
+};
+
 export const userServices = {
   createUserIntoDB,
   getAllUsers,
@@ -55,4 +69,6 @@ export const userServices = {
   updateUserData,
   deleteUser,
   usersOrderData,
+  getSIngleUserOrder,
+  getTotalPricePerUser,
 };

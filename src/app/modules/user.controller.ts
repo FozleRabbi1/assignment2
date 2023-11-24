@@ -126,6 +126,48 @@ const usersOrderData = async (req: Request, res: Response) => {
   }
 };
 
+const getSIngleUserOrder = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const result = await userServices.getSIngleUserOrder(userId);
+    res.status(200).json({
+      success: true,
+      message: 'User fetched successfully!',
+      data: result,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+    });
+  }
+};
+
+const getTotalPricePerUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const result = await userServices.getTotalPricePerUser(userId);
+    res.status(200).json({
+      success: true,
+      message: 'Total price calculated successfully!',
+      data: { totalPrice: result },
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+    });
+  }
+};
+
 export const usersControler = {
   createUsers,
   getAllUsers,
@@ -133,4 +175,6 @@ export const usersControler = {
   updateUserData,
   deleteUser,
   usersOrderData,
+  getSIngleUserOrder,
+  getTotalPricePerUser,
 };
