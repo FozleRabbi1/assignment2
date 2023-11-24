@@ -7,13 +7,10 @@ const app: Application = express();
 app.use(express.json());
 app.use(cors());
 
-app.use('/api/v1', userRouter);
+app.use('/api', userRouter);
 
 app.get('/', (req: Request, res: Response) => {
-  const a = 10;
-  console.log(a);
-
-  res.send(a);
+  res.send();
 });
 
 export default app;

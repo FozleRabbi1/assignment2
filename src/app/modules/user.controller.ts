@@ -9,7 +9,7 @@ const createUsers = async (req: Request, res: Response) => {
     const result = await userServices.createUserIntoDB(validData);
     res.status(200).json({
       success: true,
-      message: 'User create successfully!',
+      message: 'User created successfully!',
       data: result,
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,6 +22,46 @@ const createUsers = async (req: Request, res: Response) => {
   }
 };
 
+const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const result = await userServices.getAllUsers();
+    res.status(200).json({
+      success: true,
+      message: 'Users fetched successfully!',
+      data: result,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetched',
+      err: err,
+    });
+  }
+};
+
+const getSingleUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const result = await userServices.getSIngleUser(userId);
+    res.status(200).json({
+      success: true,
+      message: 'User fetched successfully!',
+      data: result,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+    });
+  }
+};
+
 export const usersControler = {
   createUsers,
+  getAllUsers,
+  getSingleUser,
 };
