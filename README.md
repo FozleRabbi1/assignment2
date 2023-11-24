@@ -1,2 +1,3 @@
 ## assignment2
-* some information about this project
+# some information about this project
+
