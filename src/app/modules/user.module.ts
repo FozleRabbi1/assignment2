@@ -1,5 +1,11 @@
 import { Schema, model } from 'mongoose';
-import { Taddress, TfullName, Torders, Tuser } from './user.interface';
+import {
+  Taddress,
+  TfullName,
+  Torders,
+  Tuser,
+  UserModel,
+} from './user.interface';
 import bcrypt from 'bcrypt';
 import config from '../config';
 
@@ -26,7 +32,7 @@ const userOrderSchema = new Schema<Torders>({
   // _id: false,
 });
 
-const userSchema = new Schema<Tuser>({
+const userSchema = new Schema<Tuser, UserModel>({
   userId: {
     type: Number,
     required: [true, 'User ID is required'],
@@ -66,5 +72,10 @@ userSchema.set('toJSON', {
   },
 });
 
-const UserData = model<Tuser>('UserData', userSchema);
+userSchema.statics.isUserExists = async function (userId: number) {
+  const existingUser = await UserData.findOne({ userId });
+  return existingUser;
+};
+
+const UserData = model<Tuser, UserModel>('UserData', userSchema);
 export default UserData;

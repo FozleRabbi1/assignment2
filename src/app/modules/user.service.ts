@@ -2,6 +2,9 @@ import { Torders, Tuser } from './user.interface';
 import UserData from './user.module';
 
 const createUserIntoDB = async (data: Tuser): Promise<Tuser> => {
+  if (await UserData.isUserExists(String(data.userId))) {
+    throw new Error('user already exists');
+  }
   const result = await UserData.create(data);
   return result;
 };
@@ -17,49 +20,82 @@ const getAllUsers = async () => {
   return result;
 };
 
-const getSIngleUser = async (userId: string | number) => {
-  const result = await UserData.findById(userId);
-  return result;
+const getSIngleUser = async (userId: number) => {
+  const result = await UserData.findOne({ userId });
+  if (result) {
+    return result;
+  } else {
+    throw new Error('user not found');
+  }
 };
 
 const updateUserData = async (
-  id: string,
+  userId: number,
   userData: Tuser,
 ): Promise<Tuser | null> => {
-  const result = await UserData.findByIdAndUpdate(id, userData, {
+  const result = await UserData.findOneAndUpdate({ userId }, userData, {
     new: true,
     runValidators: true,
   });
-  return result;
-};
-
-const deleteUser = async (userId: string): Promise<Tuser | null> => {
-  const result = await UserData.findByIdAndDelete(userId);
-  return result;
-};
-
-const usersOrderData = async (id: string, orders: Torders) => {
-  const filterdata = await UserData.findById(id);
-  if (!filterdata.orders) {
-    filterdata.orders = [];
+  if (result) {
+    return result;
+  } else {
+    throw new Error('user not found');
   }
-  filterdata?.orders?.push(orders);
-  const result = await UserData.findByIdAndUpdate(id, filterdata);
-  return result;
 };
 
-const getSIngleUserOrder = async (id: string | number) => {
-  const result = await UserData.findById(id).select({ orders: 1 });
-  return result;
+const deleteUser = async (userId: number) => {
+  if (await UserData.isUserExists(String(userId))) {
+    const result = await UserData.deleteOne({ userId });
+    return result;
+  } else {
+    throw new Error('user not found');
+  }
 };
 
-const getTotalPricePerUser = async (id: string | number) => {
-  const orderData = await UserData.findById(id).select({ orders: 1 });
-  let totalAmount = 0;
-  orderData?.orders?.map(
-    (data) => (totalAmount = totalAmount + data.price * data.quantity),
-  );
-  return totalAmount;
+const usersOrderData = async (userId: number, orders: Torders) => {
+  if (await UserData.isUserExists(String(userId))) {
+    const filterdata = await UserData.findOne({ userId });
+    if (!filterdata.orders) {
+      filterdata.orders = [];
+    }
+    filterdata?.orders?.push(orders);
+    const result = await UserData.findOneAndUpdate({ userId }, filterdata);
+    return result;
+  } else {
+    throw new Error('user not found');
+  }
+};
+
+const getSIngleUserOrder = async (userId: number) => {
+  if (await UserData.isUserExists(String(userId))) {
+    const result = await UserData.findOne({ userId }).select({ orders: 1 });
+    return result;
+  } else {
+    throw new Error('user not found');
+  }
+};
+
+const getTotalPricePerUser = async (userId: number) => {
+  if (await UserData.isUserExists(String(userId))) {
+    const result = UserData.aggregate([
+      { $match: { userId } },
+      { $unwind: '$orders' },
+      {
+        $group: {
+          _id: null,
+          totalPrice: {
+            $sum: { $multiply: ['$orders.price', '$orders.quantity'] },
+          },
+        },
+      },
+      { $project: { _id: 0, totalPrice: 1 } },
+    ]);
+
+    return result;
+  } else {
+    throw new Error('user not found');
+  }
 };
 
 export const userServices = {

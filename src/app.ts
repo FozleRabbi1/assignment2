@@ -10,7 +10,8 @@ app.use(cors());
 app.use('/api', userRouter);
 
 app.get('/', (req: Request, res: Response) => {
-  res.send();
+  const data = 'app run successfully';
+  res.send(data);
 });
 
 export default app;

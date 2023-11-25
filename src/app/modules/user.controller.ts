@@ -42,7 +42,7 @@ const getAllUsers = async (req: Request, res: Response) => {
 const getSingleUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const result = await userServices.getSIngleUser(userId);
+    const result = await userServices.getSIngleUser(parseInt(userId));
     res.status(200).json({
       success: true,
       message: 'User fetched successfully!',
@@ -63,8 +63,12 @@ const getSingleUser = async (req: Request, res: Response) => {
 const updateUserData = async (req: Request, res: Response) => {
   try {
     const { userData } = req.body;
-    const id = req.params.userId;
-    const result = await userServices.updateUserData(id, userData);
+    const userId = req.params.userId;
+    // console.log(userId);
+    const result = await userServices.updateUserData(
+      parseInt(userId),
+      userData,
+    );
     res.status(200).json({
       status: 'success',
       message: 'User updated successfully',
@@ -78,16 +82,15 @@ const updateUserData = async (req: Request, res: Response) => {
         code: 404,
         description: 'User not found!',
       },
-      err: err,
     });
   }
 };
 
 const deleteUser = async (req: Request, res: Response) => {
   try {
-    const id = req.params.userId;
+    const userId = req.params.userId;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-    const result = await userServices.deleteUser(id);
+    const result = await userServices.deleteUser(parseInt(userId));
     res.status(200).json({
       success: true,
       message: 'User deleted successfully!',
@@ -106,9 +109,9 @@ const deleteUser = async (req: Request, res: Response) => {
 const usersOrderData = async (req: Request, res: Response) => {
   try {
     const { orders } = req.body;
-    const id = req.params.userId;
+    const userId = req.params.userId;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-    const result = await userServices.usersOrderData(id, orders);
+    const result = await userServices.usersOrderData(parseInt(userId), orders);
     res.status(200).json({
       success: true,
       message: 'Order created successfully!',
@@ -129,7 +132,7 @@ const usersOrderData = async (req: Request, res: Response) => {
 const getSIngleUserOrder = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const result = await userServices.getSIngleUserOrder(userId);
+    const result = await userServices.getSIngleUserOrder(parseInt(userId));
     res.status(200).json({
       success: true,
       message: 'User fetched successfully!',
@@ -150,11 +153,11 @@ const getSIngleUserOrder = async (req: Request, res: Response) => {
 const getTotalPricePerUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const result = await userServices.getTotalPricePerUser(userId);
+    const result = await userServices.getTotalPricePerUser(parseInt(userId));
     res.status(200).json({
       success: true,
       message: 'Total price calculated successfully!',
-      data: { totalPrice: result },
+      data: result,
     });
   } catch (err) {
     res.status(500).json({
