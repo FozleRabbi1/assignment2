@@ -3,21 +3,18 @@ import { Model } from 'mongoose';
 export type TfullName = {
   firstName: string;
   lastName: string;
-  // _id: false;
 };
 
 export type Taddress = {
   street: string;
   city: string;
   country: string;
-  // _id: false;
 };
 
 export type Torders = {
   productName: string;
   price: number;
   quantity: number;
-  // _id: false;
 };
 
 export type Tuser = {
