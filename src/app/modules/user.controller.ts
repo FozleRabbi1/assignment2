@@ -4,8 +4,8 @@ import { zodValidationUserSchema } from './user.validation';
 
 const createUsers = async (req: Request, res: Response) => {
   try {
-    const { userData } = req.body;
-    const validData = zodValidationUserSchema.parse(userData);
+    // const { userData } = req.body;
+    const validData = zodValidationUserSchema.parse(req?.body);
     const result = await userServices.createUserIntoDB(validData);
     res.status(200).json({
       success: true,
@@ -62,12 +62,12 @@ const getSingleUser = async (req: Request, res: Response) => {
 
 const updateUserData = async (req: Request, res: Response) => {
   try {
-    const { userData } = req.body;
+    // const { userData } = req.body;
     const userId = req.params.userId;
     // console.log(userId);
     const result = await userServices.updateUserData(
       parseInt(userId),
-      userData,
+      req?.body,
     );
     res.status(200).json({
       status: 'success',
@@ -108,10 +108,13 @@ const deleteUser = async (req: Request, res: Response) => {
 
 const usersOrderData = async (req: Request, res: Response) => {
   try {
-    const { orders } = req.body;
+    // const { orders } = req.body;
     const userId = req.params.userId;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-    const result = await userServices.usersOrderData(parseInt(userId), orders);
+    const result = await userServices.usersOrderData(
+      parseInt(userId),
+      req?.body,
+    );
     res.status(200).json({
       success: true,
       message: 'Order created successfully!',
@@ -157,7 +160,7 @@ const getTotalPricePerUser = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: 'Total price calculated successfully!',
-      data: result,
+      data: result[0],
     });
   } catch (err) {
     res.status(500).json({
